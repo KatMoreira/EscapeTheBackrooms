@@ -1,1 +1,811 @@
-
+{
+  "description": "A New Flow",
+  "states": [
+    {
+      "name": "Trigger",
+      "type": "trigger",
+      "transitions": [
+        {
+          "next": "theBeginning",
+          "event": "incomingMessage"
+        },
+        {
+          "event": "incomingCall"
+        },
+        {
+          "event": "incomingRequest"
+        },
+        {
+          "event": "incomingParent"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 20,
+          "y": -40
+        }
+      }
+    },
+    {
+      "name": "theBeginning",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "firstReply",
+          "event": "sent"
+        },
+        {
+          "next": "theBeginning",
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -130,
+          "y": 170
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "A cold breeze chills you awake as you find yourself alone in an unfamiliar location. It is nothing but a room painted a dark shade of yellow with four pillars strategically placed around. You call out with no response and the breeze finds its way back into the air. Following it leads you down an almost never-ending hallway. \n-\nDown the path of moldy brown carpet, the chill becomes unbearable. Any longer and you’re not sure if you’ll make it. Luckily, you look to your right to see three doors - but all seemingly out of place. The first door is gray with four decorative panels carved into it. The second is a tall and wide wooden door. The third is a brick door that has lost its color."
+      }
+    },
+    {
+      "name": "firstReply",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "firstCrossroads",
+          "event": "incomingMessage"
+        },
+        {
+          "event": "timeout"
+        },
+        {
+          "next": "theBeginning",
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -430,
+          "y": 360
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "body": "Which do you choose?\n1 - Gray Door\n2 - Wooden Door\n3 - Brick Door\n-\n(TIP: TYPE \"END\" AT ANY CROSSROADS IF YOU WISH TO LEAVE THE GAME)",
+        "timeout": "3600"
+      }
+    },
+    {
+      "name": "firstCrossroads",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "firstError",
+          "event": "noMatch"
+        },
+        {
+          "next": "secondEntrance",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "2",
+              "arguments": [
+                "{{widgets.firstReply.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "2"
+            }
+          ]
+        },
+        {
+          "next": "thirdEntrance",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "3",
+              "arguments": [
+                "{{widgets.firstReply.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "3"
+            }
+          ]
+        },
+        {
+          "next": "firstEntrance",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "1",
+              "arguments": [
+                "{{widgets.firstReply.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "next": "PlayAgain",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to END",
+              "arguments": [
+                "{{widgets.firstReply.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "END"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.firstReply.inbound.Body}}",
+        "offset": {
+          "x": -1010,
+          "y": 540
+        }
+      }
+    },
+    {
+      "name": "firstError",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "firstCrossroads",
+          "event": "incomingMessage"
+        },
+        {
+          "event": "timeout"
+        },
+        {
+          "next": "firstCrossroads",
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -1720,
+          "y": 510
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "body": "You must hurry, it is freezing! Please provide a valid response!",
+        "timeout": "3600"
+      }
+    },
+    {
+      "name": "fourthEntrance",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "deathEitherWay",
+          "event": "incomingMessage"
+        },
+        {
+          "event": "timeout"
+        },
+        {
+          "next": "fourthEntrance",
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -910,
+          "y": 1030
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "body": "A pirate emerges from the shadows. Oh no! You have taken his gold! Quickly looking around, you see your only opportunity for escape is a stone door which you should be able to reach if you make a run for it. Alternatively, you could try to fight the pirate to gain both your freedom and some gold. \n-\nWhich do you choose?\n1 - Travel through the Stone Door\n2 - Fight the Pirate",
+        "timeout": "3600"
+      }
+    },
+    {
+      "name": "fifthEntrance",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "maybeWin",
+          "event": "incomingMessage"
+        },
+        {
+          "event": "timeout"
+        },
+        {
+          "next": "fifthEntrance",
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -540,
+          "y": 1020
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "body": "Getting more into the tunnel causes your surroundings to become more and more flooded, but luckily there are two wooden doors. One that is plain and one with the design of a flower on it.\n-\nWhich will you choose?\n1 - Plain Door\n2 - Flower Door",
+        "timeout": "3600"
+      }
+    },
+    {
+      "name": "deathEitherWay",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "secondError",
+          "event": "noMatch"
+        },
+        {
+          "next": "sixthEntrance",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 1",
+              "arguments": [
+                "{{widgets.fourthEntrance.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "next": "fightThePirate",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 2",
+              "arguments": [
+                "{{widgets.fourthEntrance.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "2"
+            }
+          ]
+        },
+        {
+          "next": "PlayAgain",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to END",
+              "arguments": [
+                "{{widgets.fourthEntrance.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "END"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.fourthEntrance.inbound.Body}}",
+        "offset": {
+          "x": -980,
+          "y": 1250
+        }
+      }
+    },
+    {
+      "name": "maybeWin",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "thirdError",
+          "event": "noMatch"
+        },
+        {
+          "next": "eighthEntrance",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 1",
+              "arguments": [
+                "{{widgets.fifthEntrance.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "next": "ninthEntrance",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 2",
+              "arguments": [
+                "{{widgets.fifthEntrance.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "2"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.fifthEntrance.inbound.Body}}",
+        "offset": {
+          "x": -340,
+          "y": 1320
+        }
+      }
+    },
+    {
+      "name": "eighthEntrance",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "lastChanceToDie",
+          "event": "incomingMessage"
+        },
+        {
+          "event": "timeout"
+        },
+        {
+          "next": "eighthEntrance",
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -90,
+          "y": 1600
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "body": "In the middle of the room, there is a square area missing from the otherwise plain, carpeted floor, prompting you to investigate. You notice an almost infinite tunnel, but sounds do escape it. You can faintly make out screams, crashes, and possibly the ocean. There is no other path to take, except if you were to maybe go back and try the other path in the flooded room. \n-\nWhich do you choose?\n1 - Jump down the hole\n2 - Go back to previous room",
+        "timeout": "3600"
+      }
+    },
+    {
+      "name": "lastChanceToDie",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "fourthError",
+          "event": "noMatch"
+        },
+        {
+          "next": "winnerWinner",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 1",
+              "arguments": [
+                "{{widgets.eighthEntrance.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "next": "maybeWin",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 2",
+              "arguments": [
+                "{{widgets.eighthEntrance.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "2"
+            }
+          ]
+        },
+        {
+          "next": "PlayAgain",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to END",
+              "arguments": [
+                "{{widgets.eighthEntrance.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "END"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.eighthEntrance.inbound.Body}}",
+        "offset": {
+          "x": 170,
+          "y": 1940
+        }
+      }
+    },
+    {
+      "name": "PlayAgain",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "WillTheyPlay",
+          "event": "incomingMessage"
+        },
+        {
+          "event": "timeout"
+        },
+        {
+          "next": "PlayAgain",
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -1520,
+          "y": 1990
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "body": "You've reached the end of your path. Would you like to play again?\n1 - Yes\n2 - No",
+        "timeout": "3600"
+      }
+    },
+    {
+      "name": "WillTheyPlay",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "PlayAgain",
+          "event": "noMatch"
+        },
+        {
+          "next": "theBeginning",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 1",
+              "arguments": [
+                "{{widgets.PlayAgain.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "next": "EndOfGame",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 2",
+              "arguments": [
+                "{{widgets.PlayAgain.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "2"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.PlayAgain.inbound.Body}}",
+        "offset": {
+          "x": -2200,
+          "y": 2340
+        }
+      }
+    },
+    {
+      "name": "EndOfGame",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "PlayAgainPartTwo",
+          "event": "sent"
+        },
+        {
+          "next": "EndOfGame",
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -2070,
+          "y": 2640
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Thank you for playing! Hope you enjoyed! Message this number at any time to play again!"
+      }
+    },
+    {
+      "name": "firstEntrance",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "PlayAgain",
+          "event": "sent"
+        },
+        {
+          "next": "firstEntrance",
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -1210,
+          "y": 810
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "You walk in to find… not much. The space is completely silent… eerily silent, as though you are the only person in the world. After a few steps, you notice a figure sitting in the right corner of the room towards where you entered. You have disturbed them. They pounce themselves onto you before you can determine what they are or find the ability to fight back. Better luck next time!"
+      }
+    },
+    {
+      "name": "secondEntrance",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "fourthEntrance",
+          "event": "sent"
+        },
+        {
+          "next": "secondEntrance",
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -830,
+          "y": 820
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "As you enter the tunnel, you spot a pouch of gold coins sitting across the other end of the hallwway. Lucky you!"
+      }
+    },
+    {
+      "name": "thirdEntrance",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "fifthEntrance",
+          "event": "sent"
+        },
+        {
+          "next": "thirdEntrance",
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -430,
+          "y": 800
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Immediately, it is as though you have never been cold a day in your life. The overwhelming warmth that escapes from behind the brick door is enough to make you want to turn around and go to the cold but as you are in the room, the door slams itself shut behind you. In an attempt to save yourself from the heat, you run down a tunnel leading into another room."
+      }
+    },
+    {
+      "name": "secondError",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "deathEitherWay",
+          "event": "sent"
+        },
+        {
+          "next": "secondError",
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -1420,
+          "y": 1490
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Please provide a valid response! Your life depends on it!"
+      }
+    },
+    {
+      "name": "sixthEntrance",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "next": "sixthEntrance",
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -1090,
+          "y": 1490
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Upon entering the stone door, you hear the pounding on the door from the pirate on the other side, but they are unable to enter. This new room looks very different from the previous, you are surrounded by a rocky interior, almost like you are in a cave. Opening the door causes a disturbance in the infrastructure and the cave-like room crashes on top of you. Better luck next time!"
+      }
+    },
+    {
+      "name": "fightThePirate",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "next": "fightThePirate",
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -770,
+          "y": 1490
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "You have chosen to fight the pirate!! Their pirate crew shows up and takes every measure to obtain back their gold. You are obliterated. Better luck next time!"
+      }
+    },
+    {
+      "name": "thirdError",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "maybeWin",
+          "event": "sent"
+        },
+        {
+          "next": "thirdError",
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -470,
+          "y": 1720
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Please provide a valid response! Your life depends on it!"
+      }
+    },
+    {
+      "name": "ninthEntrance",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "PlayAgain",
+          "event": "sent"
+        },
+        {
+          "next": "ninthEntrance",
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 340,
+          "y": 1600
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "There is not even time to observe your surroundings or have a thought before your thoughts are no longer there. You die an immediate death. Better luck next time!"
+      }
+    },
+    {
+      "name": "fourthError",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "lastChanceToDie",
+          "event": "sent"
+        },
+        {
+          "next": "fourthError",
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 850,
+          "y": 1890
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "You must make it out alive! Please provide a valid response!"
+      }
+    },
+    {
+      "name": "winnerWinner",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "PlayAgain",
+          "event": "sent"
+        },
+        {
+          "next": "winnerWinner",
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 110,
+          "y": 2280
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Your leap of faith has led to an ocean shore where you become surrounded by families enjoying a beach day. Congratulations! You escaped the Backrooms!"
+      }
+    },
+    {
+      "name": "PlayAgainPartTwo",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "event": "noMatch"
+        },
+        {
+          "next": "theBeginning",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "EndOfGame.inbound.Body",
+              "arguments": [
+                "{{widgets.EndOfGame.inbound.Body}}"
+              ],
+              "type": "is_not_blank",
+              "value": "Is Not Blank"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.EndOfGame.inbound.Body}}",
+        "offset": {
+          "x": -2080,
+          "y": 2910
+        }
+      }
+    }
+  ],
+  "initial_state": "Trigger",
+  "flags": {
+    "allow_concurrent_calls": true
+  }
+}
