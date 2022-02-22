@@ -1,0 +1,88 @@
+INTRODUCTION:  
+**TEXT ONE**:  
+A cold breeze chills you awake as you find yourself alone in an unfamiliar location. It is nothing but a room painted a dark shade of yellow with four pillars strategically 
+placed around. You call out with no response and the breeze finds its way back into the air. Following it leads you down an almost never-ending hallway. 
+-
+Down the path of moldy brown carpet, the chill becomes unbearable. Any longer and you’re not sure if you’ll make it. Luckily, you look to your right to see three doors - 
+but all seemingly out of place. The first door is gray with four decorative panels carved into it. The second is a tall and wide wooden door. The third is a brick door that 
+has lost its color.
+
+**TEXT TWO**:  
+Which do you choose?
+1 - Gray Door
+2 - Wooden Door
+3 - Brick Door
+-
+(TIP: TYPE “END” AT ANY CROSSROADS IF YOU WISH TO LEAVE THE GAME)  
+
+**IF 1**:  
+You walk in to find… not much. The space is completely silent… eerily silent, as though you are the only person in the world. After a few steps, you notice a figure sitting 
+in the right corner of the room towards where you entered. You have disturbed them. They pounce themselves onto you before you can determine what they are or find the 
+ability to fight back. Better luck next time!  
+
+{
+## SUBFLOW
+**IF 2**:
+As you enter the tunnel, you spot a pouch of gold coins sitting across the other end of the hallway. Lucky you!
+
+A pirate emerges from the shadows. Oh no! You have taken his gold! Quickly looking around, you see your only opportunity for escape is a stone door which you should be able 
+to reach if you make a run for it. Alternatively, you could try to fight the pirate to gain both your freedom and some gold. 
+-
+Which do you choose?
+1- Travel through the Stone Door
+2- Fight the Pirate
+
+**IF 1**:
+Upon entering the stone door, you hear the pounding on the door from the pirate on the other side, but they are unable to enter. This new room looks very different from 
+the previous, you are surrounded by a rocky interior, almost like you are in a cave. Opening the door causes a disturbance in the infrastructure and the cave-like room 
+crashes on top of you. Better luck next time!
+
+**IF 2**:
+You have chosen to fight the pirate!! Their pirate crew shows up and takes every measure to obtain back their gold. You are obliterated. Better luck next time!
+## SUBFLOW ENDS
+}
+
+{
+## SUBFLOW
+**IF 3**:
+Immediately, it is as though you have never been cold a day in your life. The overwhelming warmth that escapes from behind the brick door is enough to make you want to 
+turn around and go to the cold but as you are in the room, the door slams itself shut behind you. In an attempt to save yourself from the heat, you run down a tunnel 
+leading into another room.
+
+Getting more into the tunnel causes your surroundings to become more and more flooded, but luckily there are two wooden doors. One that is plain and one with the design 
+of a flower on it.
+-
+Which will you choose?
+1 - Plain Door
+2 - Flower Door
+
+{
+## SUBFLOW
+**IF 1**:
+In the middle of the room, there is a square area missing from the otherwise plain, carpeted floor, prompting you to investigate. You notice an almost infinite tunnel, 
+but sounds do escape it. You can faintly make out screams, crashes, and possibly the ocean. There is no other path to take, except if you were to maybe go back and try 
+the other path in the flooded room. 
+-
+Which do you choose?
+1 - Jump down the hole
+2 - Go back to previous room
+
+**IF 1**:
+*trigger winnerWinner* -> winnerWinner: Your leap of faith has led to an ocean shore where you become surrounded by families enjoying a beach day. Congratulations! 
+You escaped the Backrooms!
+
+**IF 2**:
+Immediately, it is as though you have never been cold a day in your life. The overwhelming warmth that escapes from behind the brick door is enough to make you want to 
+turn around and go to the cold but as you are in the room, the door slams itself shut behind you. In an attempt to save yourself from the heat, you run down a tunnel 
+leading into another room.
+
+Getting more into the tunnel causes your surroundings to become more and more flooded, but luckily there are two wooden doors. One that is plain and one with the design 
+of a flower on it.
+-
+Which will you choose?
+1 - Plain Door
+2 - Flower Door
+}
+
+**IF 2**:
+There is not even time to observe your surroundings or have a thought before your thoughts are no longer there. You die an immediate death. Better luck next time!
